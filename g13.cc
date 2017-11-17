@@ -383,7 +383,7 @@ G13_Action_Keys::G13_Action_Keys(G13_Device & keypad, const std::string &keys_st
 		G13_Action(keypad)
 {
 	std::vector<std::string> keys;
-	boost::split(keys, keys_string, boost::is_any_of("+"));
+	boost::split(keys, keys_string, boost::is_any_of("+,-,*"));
 
 	BOOST_FOREACH(std::string const &key, keys) {
 		auto kval = manager().find_input_key_value(key);
@@ -404,14 +404,17 @@ void G13_Action_Keys::act(G13_Device &g13, bool is_down) {
 		for (int i = 0; i < _keys.size(); i++) {
 			g13.send_event( EV_KEY, _keys[i], is_down);
 			G13_LOG( trace, "sending KEY DOWN " << _keys[i] );
+                        g13.send_event( EV_KEY, _keys[i], !is_down);
+                        G13_LOG( trace, "sending KEY UP " << _keys[i] );
 		}
-	} else {
-		for (int i = _keys.size() - 1; i >= 0; i--) {
-			g13.send_event( EV_KEY, _keys[i], is_down);
-			G13_LOG( trace, "sending KEY UP " << _keys[i] );
-		}
-
-	}
+        }
+//	} else {
+//		for (int i = _keys.size() - 1; i >= 0; i--) {
+//			g13.send_event( EV_KEY, _keys[i], is_down);
+//			G13_LOG( trace, "sending KEY UP " << _keys[i] );
+//		}
+//
+//	}
 }
 
 void G13_Action_Keys::dump( std::ostream &out ) const {

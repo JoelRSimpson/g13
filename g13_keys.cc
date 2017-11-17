@@ -50,9 +50,9 @@ namespace G13 {
 		(NUMLOCK)(SCROLLLOCK)												\
 		(KP7)(KP8)(KP9)(KPMINUS)(KP4)(KP5)(KP6)(KPPLUS)						\
 		(KP1)(KP2)(KP3)(KP0)(KPDOT)											\
-		(LEFT)(RIGHT)(UP)(DOWN)												\
+		(LEFT)(RIGHT)(UP)(DOWN)											\
 		(PAGEUP)(PAGEDOWN)(HOME)(END)(INSERT)(DELETE)						\
-
+		(ZENKAKUHANKAKU)(102ND)(MUTE)								\
 
 // *************************************************************************
 
