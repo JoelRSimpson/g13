@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         sopt_names.push_back(name);
     };
     add_string_option("logo", "set logo from file");
-    add_string_option("config", "load config commands from file");
+    add_string_option("config", "load config commands from file (otherwise ~/.g13/default.bind, ./default.bind, or ./configs/default.bind)");
     add_string_option("pipe_in", "specify name for input pipe");
     add_string_option("pipe_out", "specify name for output pipe");
     add_string_option("log_level", "logging level");

@@ -7,6 +7,9 @@
 * Add events for triggering scripts/apps.
 * Add events for keypad layer switching (like the logitech software allows for the M1/M2/M3 keys)
 * Add events for keypad color change (like the logitech software allows for the M1/M2/M3 keys)
+* Support keycodes directly
+* Layout design/programming tool
+* On-board settings storage/retrieval 
 
 ## Installation
 
@@ -72,7 +75,11 @@ Option 				|  Description
 
 Configuration is accomplished using the commands described in the [Commands] section.
 
-Commands can be loaded from a file specified by the --config option on the command line.  
+On start, commands from a configuration file may be loaded from the following possible locations in order of preference:
+* the --config option on the command line.
+* users home directory: ~/.g13/default.bind
+* the local folder: ./default.bind
+* configs sub folder: ./configs/default.bind 
 
 Commands can be also be sent to the command input pipe, which is at ***/tmp/g13-0*** by 
 default. Example:

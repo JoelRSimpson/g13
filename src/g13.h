@@ -444,7 +444,7 @@ public:
 
   // used by G13_Manager
   void cleanup();
-  void register_context(libusb_context *ctx);
+  int register_context(libusb_context *ctx);
   void write_lcd_file( const std::string &filename);
 
   G13_Font &current_font() { return *_current_font; }

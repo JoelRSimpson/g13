@@ -2,6 +2,10 @@
 #include "logo.h"
 #include <fstream>
 
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+
 #if 0
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/severity_logger.hpp>
@@ -173,7 +177,7 @@ namespace G13 {
         return ufile;
     }
 
-    void G13_Device::register_context(libusb_context *_ctx) {
+    int G13_Device::register_context(libusb_context *_ctx) {
         ctx = _ctx;
 
         int leds = 0;
@@ -188,7 +192,9 @@ namespace G13 {
         write_lcd(g13_logo, sizeof (g13_logo));
 
         _uinput_fid = g13_create_uinput(this);
-
+        if(_uinput_fid == -1){
+            return -1;
+        }
 
         _input_pipe_name = _manager.make_pipe_name(this, true);
         _input_pipe_fid = g13_create_fifo(_input_pipe_name.c_str());
@@ -197,7 +203,9 @@ namespace G13 {
 
         if (_input_pipe_fid == -1) {
             G13_LOG(error, "failed opening pipe");
+            return -1;
         }
+        return 0;
     }
 
     void G13_Device::cleanup() {
@@ -381,7 +389,7 @@ namespace G13 {
     G13_Action_Keys::G13_Action_Keys(G13_Device & keypad, const std::string &keys_string) :
     G13_Action(keypad) {
         std::vector<std::string> keys;
-        boost::split(keys, keys_string, boost::is_any_of("+,-,*"));
+        boost::split(keys, keys_string, boost::is_any_of("+"));
 
         BOOST_FOREACH(std::string const &key, keys) {
             auto kval = manager().find_input_key_value(key);
@@ -402,17 +410,18 @@ namespace G13 {
             for (int i = 0; i < _keys.size(); i++) {
                 g13.send_event(EV_KEY, _keys[i], is_down);
                 G13_LOG(trace, "sending KEY DOWN " << _keys[i]);
-                g13.send_event(EV_KEY, _keys[i], !is_down);
+                // FIXES PROBLEM WITH SUBSEQUENT PRESSES OF THE SAME KEY IN A MACRO,
+                //  likely causes shift and other modifier keys/sequences not to work
+                //                g13.send_event(EV_KEY, _keys[i], !is_down);
+                //                G13_LOG(trace, "sending KEY UP " << _keys[i]);
+            }
+        } else {
+            for (int i = _keys.size() - 1; i >= 0; i--) {
+                g13.send_event(EV_KEY, _keys[i], is_down);
                 G13_LOG(trace, "sending KEY UP " << _keys[i]);
             }
+
         }
-        //	} else {
-        //		for (int i = _keys.size() - 1; i >= 0; i--) {
-        //			g13.send_event( EV_KEY, _keys[i], is_down);
-        //			G13_LOG( trace, "sending KEY UP " << _keys[i] );
-        //		}
-        //
-        //	}
     }
 
     void G13_Action_Keys::dump(std::ostream &out) const {
@@ -506,7 +515,7 @@ namespace G13 {
         }                                                                       \
 
 
-struct command_adder {
+    struct command_adder {
 
         command_adder(G13_Device::CommandFunctionTable & t, const char *name) : _t(t), _name(name) {
         }
@@ -769,7 +778,10 @@ struct command_adder {
         }
 
         for (int i = 0; i < g13s.size(); i++) {
-            g13s[i]->register_context(ctx);
+            if (g13s[i]->register_context(ctx) == -1){
+                cleanup();
+                return -1;
+            }
         }
         signal(SIGINT, set_stop);
         if (g13s.size() > 0 && logo_filename.size()) {
@@ -779,11 +791,31 @@ struct command_adder {
         G13_LOG(info, "Active Stick zones ");
         g13s[0]->stick().dump(std::cout);
 
-        std::string config_fn = string_config_value("config");
-        if (config_fn.size()) {
-            G13_LOG(info, "config_fn = " << config_fn);
-            g13s[0]->read_config_file(config_fn);
+        std::string configOptions[] = {
+            string_config_value("config"), //passed in
+            getpwuid(getuid())->pw_dir + std::string("/.g13/default.bind"), //home directory
+            "./default.bind", //possibly when installed, place alongside?
+            "configs/default.bind" //likely in dev environment
+        };
+        
+        std::string config_fn; //the file we'll load
+        for (int i = 0; i < sizeof(configOptions); i++){
+            if(!configOptions[i].size()) continue; //skip empty
+            if (access(configOptions[i].c_str(), F_OK) != -1){
+                G13_LOG(info, "Looked for config file '" << configOptions[i] << "', FOUND.");
+                config_fn = configOptions[i].c_str();
+                break;
+            }else{
+                G13_LOG(info, "Looked for config file '" << configOptions[i] << "', does not exist.");
+            }
         }
+                
+        if (config_fn.size()) { //did we find a config file?
+            g13s[0]->read_config_file(config_fn); 
+        }else{
+            G13_LOG(info, "Proceeding without loading a configuration.");
+        }
+        
 
         do {
             if (g13s.size() > 0)
