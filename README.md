@@ -1,11 +1,18 @@
-# Userspace driver for the G13
+# Userspace driver for the Logitech™ G13 Advanced Gameboard 
+(https://www.logitechg.com/en-us/product/g13-advanced-gameboard)
+
+## To Do
+* Enable key down and key up actions for use in creating multi-character macros - in prior code, it pressed all keys in the list and then released all keys.  Macros with identical keys only triggered the first.  (e.g. G22 becomes G2).
+* Debounce the joystick key mode so that single triggering works well for things like Next Song, and repeat triggering works for volume or scrolling type events.
+* Add events for triggering scripts/apps.
+* Add events for keypad layer switching (like the logitech software allows for the M1/M2/M3 keys)
+* Add events for keypad color change (like the logitech software allows for the M1/M2/M3 keys)
 
 ## Installation
 
 Make sure you have boost and libusb-1.0 installed.
 
-### For Ubuntu (15.10)
-
+ **For Ubuntu (15.10)**
 * ***sudo apt-get install libusb-1.0-0-dev***
 * ***sudo apt-get install libboost-all-dev***
 
@@ -22,7 +29,7 @@ If you want to run the daemon as user, put the file 91-g13.rules into /etc/udev/
 
 Connect your device, then run ./g13d, it should automatically find your device.
 
-If you see output like
+If you see output like the following things are good.  If you see any kind of [error] (especially "/dev/uinput doesn't grant write permissions") you may need to run with sudo. This output also shows you which name the keys on the G13 have, and what keys you can bind them to.
 
     Known keys on G13:
     BD DOWN G1 G10 G11 G12 G13 G14 G15 G16 G17 G18 G19 G2 G20 G21 G22 G3 G4 G5 G6 G7
@@ -47,7 +54,7 @@ If you see output like
 
 
 
-that is good. This also shows you which name the keys on the G13 have, and what keys you can bind them to.
+
 
 ### Command line options
 

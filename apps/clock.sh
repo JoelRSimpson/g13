@@ -1,4 +1,15 @@
 #!/bin/bash
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+PBM2LPBM="$DIR/../bin/pbm2lpbm"
+
 center_x=30
 center_y=20
 diameter=18
@@ -37,6 +48,6 @@ min_x=$(echo "scale=3;$center_x + $min_orig_y * s($min/60*(2*4*a(1)))" | bc -l)
 min_y=$(echo "scale=3;$center_y - $min_orig_y * c($min/60*(2*4*a(1)))" | bc -l)
 preparams="-size 160x43 xc:white -stroke black -fill white -draw \"circle 30,20 30,2\" -draw \"line 30,20 $sec_x,$sec_y\" -draw \"line 30,20 $min_x,$min_y\" -draw \"line 30,20 $hr_x,$hr_y\" "
 postparams="-pointsize 16 -fill black -font Courier -draw \"text 60,15 '$Date'\" -draw \"text 68,35 '$Time'\" pbm:- "
-eval convert $preparams $ticks $postparams | ./pbm2lpbm > /tmp/g13-0
+eval convert $preparams $ticks $postparams | $PBM2LPBM > /tmp/g13-0
 sleep 1
 done

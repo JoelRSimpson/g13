@@ -26,46 +26,51 @@
  *
  */
 
-#include "helper.hpp"
+#include "helper.h"
 
 // *************************************************************************
 
 namespace Helper {
 
-void string_repr_out::write_on( std::ostream &o ) const {
+    void string_repr_out::write_on(std::ostream &o) const {
 
-	o << "\"";
-	const char *cp = s.c_str();
-	const char *end = cp + s.size();
+        o << "\"";
+        const char *cp = s.c_str();
+        const char *end = cp + s.size();
 
-	while( cp < end ) {
+        while (cp < end) {
 
-		switch( *cp ) {
-				case '\n':	o << "\\n"; break;
-				case '\r':	o << "\\r"; break;
-				case '\0':	o << "\\0"; break;
-				case '\t':	o << "\\t"; break;
-				case '\\':
-				case '\'':
-				case '\"':
-					o << "\\" << *cp;
-					break;
-				default: {
-					char c = *cp;
-					if( c < 32 ) {
-						char hi = '0' + (c & 0x0f);
-						char lo = '0' + ((c >> 4) & 0x0f);
-						o << "\\x" << hi << lo;
-					} else {
-						o << c;
-					}
-				}
-		}
-		cp++;
-	}
+            switch (*cp) {
+                case '\n': o << "\\n";
+                    break;
+                case '\r': o << "\\r";
+                    break;
+                case '\0': o << "\\0";
+                    break;
+                case '\t': o << "\\t";
+                    break;
+                case '\\':
+                case '\'':
+                case '\"':
+                    o << "\\" << *cp;
+                    break;
+                default:
+                {
+                    char c = *cp;
+                    if (c < 32) {
+                        char hi = '0' + (c & 0x0f);
+                        char lo = '0' + ((c >> 4) & 0x0f);
+                        o << "\\x" << hi << lo;
+                    } else {
+                        o << c;
+                    }
+                }
+            }
+            cp++;
+        }
 
-	o << "\"";
-};
+        o << "\"";
+    };
 
 
 }; // namespace Helper

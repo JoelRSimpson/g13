@@ -1,3 +1,4 @@
+/bin/
 /g13d
 .cproject
 .project
@@ -5,3 +6,5 @@
 *.o
 pbm2lpbm
 .settings/*
+/build/
+/nbproject/
