@@ -8,3 +8,7 @@ pbm2lpbm
 .settings/*
 /build/
 /nbproject/
+.idea
+*.iml
+.directory
+build

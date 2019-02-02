@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+G13D_HOME="/usr/lib/g13d"
+G13D_WORK="/tmp/g13d"
+
+if [ -d G13D_WORK ]
+then
+    echo "using existing $G13D_WORK as working directory ..."
+else
+    echo "creating $G13D_WORK as working directory ..."
+    mkdir "$G13D_WORK"
+fi
+
+cd "$G13D_WORK"
+cat /etc/g13d.d/default.bind >> /tmp/g13-0
+"$G13D_HOME/g13d"

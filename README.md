@@ -194,6 +194,43 @@ Changes the level of detail written to the g13d console
 Use pbm2lpbm to convert a pbm image to the correct format, then just cat that into the pipe (cat starcraft2.lpbm > /tmp/g13-0).
 The pbm file must be 160x43 pixels.
 
+
+# installing [g13d](https://github.com/ecraven/g13) as a systemd service
+
+scripts to checkout, build, install and run [g13d](https://github.com/ecraven/g13) as a systemd service. tested with debian sid.
+
+the steps that are executed are explained [here](http://lumue.github.io/2015/11/03/using-logitech-g13-on-debian-sid.html)
+
+
+## build and install
+
+to build and install use:
+
+    ./build.sh && sudo ./install.sh
+
+
+## configure
+
+to change the key bindings that are loaded by default, edit ``/usr/lib/g13d/etc/default.bind``
+
+    nano /usr/lib/g13d/etc/default.bind
+
+## starting and stopping the service
+
+start service
+ 
+    sudo systemctl start g13d-service
+    
+stop service
+  
+    sudo systemctl stop g13d-service
+     
+## removing
+
+to remove everything from your system, execute
+
+    ./uninstall.sh
+
 ## License
 
 All files without a copyright notice are placed in the public domain. Do with it whatever you want.

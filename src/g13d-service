@@ -1,0 +1,83 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          g13d-service
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Logitech G13 Driver Service
+# Description:       Init script for the Logitech G13 Keypad Service
+### END INIT INFO
+
+G13D_HOME="/usr/lib/g13d"
+PID=""
+
+function get_pid {
+   PID=`pidof g13d`
+}
+
+function stop {
+   get_pid
+   if [ -z $PID ]; then
+      echo "server is not running."
+      exit 1
+   else
+      echo -n "Stopping server.."
+      kill -9 $PID
+      sleep 1
+      echo ".. Done."
+   fi
+}
+
+
+function start {
+   get_pid
+   if [ -z $PID ]; then
+      echo  "Starting server.."
+        (/usr/bin/g13d-run &> /dev/null  &) &
+      get_pid
+      echo "Done. PID=$PID"
+   else
+      echo "server is already running, PID=$PID"
+   fi
+}
+
+function restart {
+   echo  "Restarting server.."
+   get_pid
+   if [ -z $PID ]; then
+      start
+   else
+      stop
+      sleep 5
+      start
+   fi
+}
+
+
+function status {
+   get_pid
+   if [ -z  $PID ]; then
+      echo "Server is not running."
+      exit 1
+   else
+      echo "Server is running, PID=$PID"
+   fi
+}
+
+case "$1" in
+   start)
+      start
+   ;;
+   stop)
+      stop
+   ;;
+   restart)
+      restart
+   ;;
+   status)
+      status
+   ;;
+   *)
+      echo "Usage: $0 {start|stop|restart|status}"
+esac
