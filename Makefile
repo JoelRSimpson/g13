@@ -1,4 +1,3 @@
-
 CC = g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR = src
@@ -6,7 +5,8 @@ BUILDDIR = build
 TARGETDIR = bin
 TARGET = $(TARGETDIR)/g13d
 
-SOURCES = $(shell find $(SRCDIR) -type f -name *.cc)
+SOURCES = $(shell find $(SRCDIR) -maxdepth 1 -type f -name *.cc)
+#SOURCES = $(shell find $(SRCDIR) -maxdepth 1 -type f \( -name *.cc -not -name pbm2lpbm.cc \) )
 OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.cc=.o))
 CFLAGS = $(CXXFLAGS) -DBOOST_LOG_DYN_LINK -std=c++0x
 LIB = -lusb-1.0 -lboost_program_options -lboost_log -lboost_system -lpthread
@@ -24,8 +24,8 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cc
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 	
-bin/pbm2lpbm: $(SRCDIR)/pbm2lpbm.c
-	g++ -o bin/pbm2lpbm $(SRCDIR)/pbm2lpbm.c
+bin/pbm2lpbm: $(SRCDIR)/pbm2lpbm/pbm2lpbm.cc
+	g++ -o bin/pbm2lpbm $(SRCDIR)/pbm2lpbm/pbm2lpbm.cc
 
 clean:
 	@echo " Cleaning..."; 

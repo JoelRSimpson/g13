@@ -12,3 +12,4 @@ pbm2lpbm
 *.iml
 .directory
 build
+.vscode

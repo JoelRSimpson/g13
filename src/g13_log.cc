@@ -14,34 +14,34 @@
 
 using namespace std;
 
-namespace G13 {
+namespace G13
+{
 
-    void G13_Manager::set_log_level(::boost::log::trivial::severity_level lvl) {
-        boost::log::core::get()->set_filter
-                (
-                ::boost::log::trivial::severity >= lvl
-                );
-        G13_OUT("set log level to " << lvl);
+void G13_Manager::set_log_level(::boost::log::trivial::severity_level lvl)
+{
+    boost::log::core::get()->set_filter(
+        ::boost::log::trivial::severity >= lvl);
+    G13_OUT("set log level to " << lvl);
+}
+
+void G13_Manager::set_log_level(const std::string &level)
+{
+
+#define CHECK_LEVEL(L)                           \
+    if (level == BOOST_PP_STRINGIZE(L))          \
+    {                                            \
+        set_log_level(::boost::log::trivial::L); \
+        return;                                  \
     }
 
-    void G13_Manager::set_log_level(const std::string &level) {
+    CHECK_LEVEL(trace);
+    CHECK_LEVEL(debug);
+    CHECK_LEVEL(info);
+    CHECK_LEVEL(warning);
+    CHECK_LEVEL(error);
+    CHECK_LEVEL(fatal);
 
-#define CHECK_LEVEL( L )                                                        \
-                if( level == BOOST_PP_STRINGIZE(L) ) {                          \
-                        set_log_level( ::boost::log::trivial::L );              \
-                        return;                                                 \
-                }                                                               \
-
-        CHECK_LEVEL(trace);
-        CHECK_LEVEL(debug);
-        CHECK_LEVEL(info);
-        CHECK_LEVEL(warning);
-        CHECK_LEVEL(error);
-        CHECK_LEVEL(fatal);
-
-        G13_LOG(error, "unknown log level" << level);
-    }
+    G13_LOG(error, "unknown log level" << level);
+}
 
 } // namespace G13
-
-
