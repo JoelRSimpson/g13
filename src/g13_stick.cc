@@ -33,8 +33,6 @@ G13_Stick::G13_Stick(G13_Device &keypad) : _keypad(keypad),
     add_zone("DOWN", 0.0, 0.7, 1.0, 0.9);
     add_zone("LEFT", 0.0, 0.0, 0.2, 1.0);
     add_zone("RIGHT", 0.8, 0.0, 1.0, 1.0);
-    add_zone("PAGEUP", 0.0, 0.0, 1.0, 0.1);
-    add_zone("PAGEDOWN", 0.0, 0.9, 1.0, 1.0);
 }
 
 G13_StickZone *G13_Stick::zone(const std::string &name, bool create)
