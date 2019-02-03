@@ -76,6 +76,9 @@ install:
 	@systemctl daemon-reload
 	@systemctl enable g13d.service
 	
+	@echo "starting service ..."
+	@service g13d restart
+	
 	@echo "done."
 
 uninstall:

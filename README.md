@@ -2,12 +2,14 @@
 (https://www.logitechg.com/en-us/product/g13-advanced-gameboard)
 
 ## To Do
+* Make clock app service compatible
 * Enable key down and key up actions for use in creating multi-character macros - in prior code, it pressed all keys in the list and then released all keys.  Macros with identical keys only triggered the first.  (e.g. G22 becomes G2).
 * Debounce the joystick key mode so that single triggering works well for things like Next Song, and repeat triggering works for volume or scrolling type events.
 * Add events for triggering scripts/apps.
 * Add events for keypad layer switching (like the logitech software allows for the M1/M2/M3 keys)
 * Add events for keypad color change (like the logitech software allows for the M1/M2/M3 keys)
 * Support keycodes directly
+* Create menu and selection system for LCD and control keys below the LCD
 * Layout design/programming tool
 * On-board settings storage/retrieval 
 
