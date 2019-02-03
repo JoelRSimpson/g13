@@ -795,7 +795,8 @@ namespace G13 {
             string_config_value("config"), //passed in
             getpwuid(getuid())->pw_dir + std::string("/.g13/default.bind"), //home directory
             "./default.bind", //possibly when installed, place alongside?
-            "configs/default.bind" //likely in dev environment
+            "configs/default.bind", //likely in dev environment
+	    "/etc/g13d.d/default.bind"
         };
         
         std::string config_fn; //the file we'll load

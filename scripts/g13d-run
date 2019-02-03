@@ -11,5 +11,8 @@ else
 fi
 
 cd "$G13D_WORK"
-cat /etc/g13d.d/default.bind >> /tmp/g13-0
-"$G13D_HOME/g13d"
+
+#cat /etc/g13d.d/default.bind >> /tmp/g13-0
+#"$G13D_HOME/g13d" >> /var/log/g13d.log
+"$G13D_HOME/g13d" --pipe_in "$G13D_WORK/pipe.in" --pipe_out "$G13D_WORK/pipe.out" >> "$G13D_WORK/g13d.log"
+
