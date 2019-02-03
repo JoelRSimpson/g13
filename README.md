@@ -213,15 +213,15 @@ To change the key bindings that are loaded by default, edit ``/etc/g13d.d/defaul
 
 start service
  
-    sudo systemctl start g13d-service
+    sudo systemctl start g13d
     
 stop service
   
-    sudo systemctl stop g13d-service
+    sudo systemctl stop g13d
      
 ### interacting with the service
 
-The service is configured to interact through pipes created in /tmp/g13d:
+The systemd service is configured to interact through pipes created in /tmp/g13d:
 
     /tmp/g13d/pipe.in
     /tmp/g13d/pipe.out
