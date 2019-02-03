@@ -12,6 +12,7 @@ CFLAGS = $(CXXFLAGS) -DBOOST_LOG_DYN_LINK -std=c++0x
 LIB = -lusb-1.0 -lboost_program_options -lboost_log -lboost_system -lpthread
 INC = -I include
 
+TMPDIR = tmp
 G13D_HOME = /usr/lib/g13d
 
 all: bin/g13d bin/pbm2lpbm
@@ -36,27 +37,27 @@ clean:
 .PHONY: clean
 
 install:
-	@echo "using $(BUILDDIR) for assembling the install"
-	@rm -rf $(BUILDDIR)/*
-	@mkdir -p $(BUILDDIR)/etc
-	@cp configs/*.bind $(BUILDDIR)/etc/
+	@echo "using $(TMPDIR) for assembling the install"
+	@if [ -d $(TMPDIR) ]; then rm -rf $(TMPDIR); fi
+	@mkdir -p $(TMPDIR)/etc
+	@cp configs/*.bind $(TMPDIR)/etc/
 	
 	@echo "gathering the binaries..."
-	@cp $(TARGETDIR)/* $(BUILDDIR)/
+	@cp $(TARGETDIR)/* $(TMPDIR)/
 	
 	@echo "gathering the apps..."
-	@mkdir -p $(BUILDDIR)/apps
-	@cp apps/* $(BUILDDIR)/apps/
+	@mkdir -p $(TMPDIR)/apps
+	@cp apps/* $(TMPDIR)/apps/
 	
 	@echo "gathering the init scripts..."
-	@mkdir -p $(BUILDDIR)/scripts
-	@cp scripts/* $(BUILDDIR)/scripts/
+	@mkdir -p $(TMPDIR)/scripts
+	@cp scripts/* $(TMPDIR)/scripts/
 	
 	@echo "creating install home directory..."
 	@mkdir -p "$(G13D_HOME)"
 	
 	@echo "installing scripts and bindings to $(G13D_HOME) ..."
-	cp -r $(BUILDDIR)/* "$(G13D_HOME)/" && chmod a+x "$(G13D_HOME)"/g13d* && chmod a+x "$(G13D_HOME)"/scripts/*
+	@cp -r $(TMPDIR)/* "$(G13D_HOME)/" && chmod a+x "$(G13D_HOME)"/g13d* && chmod a+x "$(G13D_HOME)"/scripts/*
 	
 	@echo "creating symlinks for executables in /usr/bin and /etc/init.d"
 	
@@ -78,10 +79,10 @@ install:
 	@echo "done."
 
 uninstall:
-	rm /usr/bin/g13d-run
-	rm /etc/g13d.d
-	rm /etc/init.d/g13d-service
-	rm /lib/systemd/g13d-service.service
+	rm -f /usr/bin/g13d-run
+	rm -f /etc/g13d.d
+	rm -f /etc/init.d/g13d
+	rm -f /lib/systemd/g13d.service
 	rm -rf /usr/lib/g13d/
 	rm -rf /tmp/g13d
 	systemctl daemon-reload
